@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Leaf, BookOpen, Shield, Award, Star, Heart, Package, Users, MapPin, Phone, Clock, Mail, CheckCircle, Smartphone, Camera, CalendarHeart, HandPlatter } from "lucide-react";
 import { useForm } from "react-hook-form";
