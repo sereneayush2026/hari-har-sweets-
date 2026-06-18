@@ -149,7 +149,7 @@ const removeItem = (itemName: string) => {
   });
 };
 const orderOnWhatsApp = () => {
-  if (cart.length === 0) {
+ if (Object.keys(cart).length === 0){
   alert("Please add items to cart first");
   return;
 }
@@ -228,20 +228,42 @@ const totalPrice = Object.entries(cart).reduce(
   <h3 className="text-xl font-bold">
     Cart Items: {Object.values(cart).reduce((a, b) => a + b, 0)}
   </h3>
+<div className="mt-3">
+  {Object.entries(cart).map(([item, qty]) => (
+    <div
+      key={item}
+      className="flex justify-between items-center gap-3 py-2"
+    >
+      <span>
+        {item} × {qty}
+      </span>
 
-  <div className="mt-3">
-    {Object.entries(cart).map(([item, qty]) => (
-      <div
-        key={item}
-        className="flex justify-between items-center gap-3 py-2"
-      >
-        <span>
-          {item} × {qty}
-        </span>
+      <div className="flex gap-2">
+        <button
+          onClick={() => addToCart(item)}
+          className="px-2 bg-green-600 text-white rounded"
+        >
+          +
+        </button>
+
+        <button
+          onClick={() => decreaseQuantity(item)}
+          className="px-2 bg-yellow-500 text-white rounded"
+        >
+          -
+        </button>
+
+        <button
+          onClick={() => removeItem(item)}
+          className="px-2 bg-red-600 text-white rounded"
+        >
+          ×
+        </button>
       </div>
-    ))}
-  </div>
-
+    </div>
+  ))}
+</div>
+  
   <button
     onClick={orderOnWhatsApp}
     className="mt-3 bg-green-600 text-white px-6 py-3 rounded-full font-bold"
