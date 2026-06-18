@@ -120,6 +120,28 @@ const About = () => {
 };
 
 const Sweets = () => {
+
+  const [cart, setCart] = useState<string[]>([]);
+
+  const addToCart = (itemName: string) => {
+    setCart((prev) => [...prev, itemName]);
+  };
+const orderOnWhatsApp = () => {
+  if (cart.length === 0) {
+  alert("Please add items to cart first");
+  return;
+}
+  const items = cart.join(", ");
+
+  const message = `Hello Harihar Hotel, I would like to order: ${items}`;
+
+  window.open(
+    `https://wa.me/919999999999?text=${encodeURIComponent(message)}`,
+    "_blank"
+  );
+  setCart([]);
+};
+  
   const sweets = [
     { name: "Kheer Pudi", desc: "Traditional festive delicacy", img: "/images/sweet-kheer-pudi.png" },
     { name: "Kesar Bati", desc: "Rich saffron-infused sweet", img: "/images/sweet-kesar-bati.png" },
@@ -140,6 +162,28 @@ const Sweets = () => {
           <h2 className="text-4xl font-serif font-bold text-foreground mb-4">Our Signature Sweets</h2>
           <div className="w-24 h-1 bg-primary mx-auto"></div>
         </div>
+        <div className="text-center mb-6">
+  <h3 className="text-xl font-bold">
+ <div className="text-center mb-6">
+  <h3 className="text-xl font-bold">
+  Cart Items: {cart.length}
+</h3>
+
+<div className="mt-3">
+  {cart.map((item, index) => (
+    <p key={index}>{item}</p>
+  ))}
+</div>
+
+  <button
+    onClick={orderOnWhatsApp}
+    className="mt-3 bg-green-600 text-white px-6 py-3 rounded-full font-bold"
+  >
+    Buy on WhatsApp
+  </button>
+</div>
+  </h3>
+</div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {sweets.map((sweet, i) => (
             <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="bg-background rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-primary/5 group">
@@ -153,9 +197,12 @@ const Sweets = () => {
               <div className="p-6 text-center">
                 <h3 className="text-2xl font-serif font-bold text-foreground mb-2">{sweet.name}</h3>
                 <p className="text-muted-foreground mb-6">{sweet.desc}</p>
-                <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="inline-block px-6 py-2 border-2 border-primary text-primary font-bold rounded-full hover:bg-primary hover:text-primary-foreground transition-colors">
-                  Order Now
-                </a>
+              <button
+  onClick={() => addToCart(sweet.name)}
+  className="inline-block px-6 py-2 border-2 border-primary text-primary font-bold rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+>
+  Add to Cart
+</button>
               </div>
             </motion.div>
           ))}
