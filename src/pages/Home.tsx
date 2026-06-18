@@ -121,17 +121,48 @@ const About = () => {
 
 const Sweets = () => {
 
-  const [cart, setCart] = useState<string[]>([]);
-
+  const [cart, setCart] = useState<Record<string, number>>({});
   const addToCart = (itemName: string) => {
-    setCart((prev) => [...prev, itemName]);
-  };
+  setCart((prev) => ({
+    ...prev,
+    [itemName]: (prev[itemName] || 0) + 1,
+  }));
+};
+const decreaseQuantity = (itemName: string) => {
+  setCart((prev) => {
+    const updated = { ...prev };
+
+    if (updated[itemName] > 1) {
+      updated[itemName]--;
+    } else {
+      delete updated[itemName];
+    }
+
+    return updated;
+  });
+};
+const removeItem = (itemName: string) => {
+  setCart((prev) => {
+    const updated = { ...prev };
+    delete updated[itemName];
+    return updated;
+  });
+};
 const orderOnWhatsApp = () => {
   if (cart.length === 0) {
   alert("Please add items to cart first");
   return;
 }
-  const items = cart.join(", ");
+const totalPrice = Object.entries(cart).reduce(
+  (total, [item, qty]) => {
+    const sweet = sweets.find((s) => s.name === item);
+    return total + (sweet?.price || 0) * qty;
+  },
+  0
+);
+  const items = Object.entries(cart)
+  .map(([item, qty]) => `${item} × ${qty}`)
+  .join(", ");
 
   const message = `Hello Harihar Hotel, I would like to order: ${items}`;
 
@@ -139,20 +170,51 @@ const orderOnWhatsApp = () => {
     `https://wa.me/919999999999?text=${encodeURIComponent(message)}`,
     "_blank"
   );
-  setCart([]);
+  setCart({});
 };
   
   const sweets = [
-    { name: "Kheer Pudi", desc: "Traditional festive delicacy", img: "/images/sweet-kheer-pudi.png" },
-    { name: "Kesar Bati", desc: "Rich saffron-infused sweet", img: "/images/sweet-kesar-bati.png" },
-    { name: "Indrani", desc: "Signature local sweet specialty", img: "/images/sweet-indrani.png" },
-    { name: "Milk Cake", desc: "Slow-cooked milk delicacy", img: "/images/sweet-milk-cake.png" },
-    { name: "Kaju Katli", desc: "Premium cashew sweet", img: "/images/sweet-kaju-katli.png" },
-    { name: "Gulab Jamun", desc: "Soft and juicy classic sweet", img: "/images/hero-2.png" },
-    { name: "Malai Chap", desc: "Cream-rich dessert specialty", img: "/images/hero-3.png" },
-    { name: "Mawa Jalebi", desc: "Traditional crispy sweet", img: "/images/hero-4.png" },
-    { name: "Kalakand", desc: "Fresh milk-based sweet", img: "/images/hero-5.png" },
-    { name: "Malai Ghewar", desc: "Royal festive dessert", img: "/images/gal-1.jpg" },
+    { 
+      name: "Kheer Pudi",
+       price: 290,
+              desc: "Traditional festive delicacy",
+        img: "/images/sweet-kheer-pudi.png"
+       },
+    { 
+      name: "Kesar Bati",
+       price:380,
+        desc: "Rich saffron-infused sweet",
+         img: "/images/sweet-kesar-bati.png"
+         },
+    { 
+      
+      name: "Indrani",
+       price: 400,
+      desc:"Signature local sweet specialty",
+       img: "/images/sweet-indrani.png"
+       },
+    { 
+      name: "Milk Cake",
+       price: 350,
+          desc: "Slow-cooked milk delicacy",
+           img: "/images/sweet-milk-cake.png"
+           },
+    {
+       name: "Kaju Katli",
+      price: 600,
+      desc: "Premium cashew sweet",
+       img: "/images/sweet-kaju-katli.png"
+       },
+    {
+       name: "Gulab Jamun",
+        price:280,
+         desc: "Soft and juicy classic sweet",
+          img: "/images/hero-2.png"
+         },
+    { name: "Malai Chap",  price: 380, desc: "Cream-rich dessert specialty", img: "/images/hero-3.png" },
+    { name: "Mawa Jalebi",  price:300, desc: "Traditional crispy sweet", img: "/images/hero-4.png" },
+    { name: "Kalakand",  price: 400, desc: "Fresh milk-based sweet", img: "/images/hero-5.png" },
+    { name: "Malai Ghewar",  price: 200, desc: "Royal festive dessert", img: "/images/gal-1.jpg" },
   ];
 
   return (
@@ -164,16 +226,21 @@ const orderOnWhatsApp = () => {
         </div>
         <div className="text-center mb-6">
   <h3 className="text-xl font-bold">
- <div className="text-center mb-6">
-  <h3 className="text-xl font-bold">
-  Cart Items: {cart.length}
-</h3>
+    Cart Items: {Object.values(cart).reduce((a, b) => a + b, 0)}
+  </h3>
 
-<div className="mt-3">
-  {cart.map((item, index) => (
-    <p key={index}>{item}</p>
-  ))}
-</div>
+  <div className="mt-3">
+    {Object.entries(cart).map(([item, qty]) => (
+      <div
+        key={item}
+        className="flex justify-between items-center gap-3 py-2"
+      >
+        <span>
+          {item} × {qty}
+        </span>
+      </div>
+    ))}
+  </div>
 
   <button
     onClick={orderOnWhatsApp}
@@ -182,8 +249,7 @@ const orderOnWhatsApp = () => {
     Buy on WhatsApp
   </button>
 </div>
-  </h3>
-</div>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {sweets.map((sweet, i) => (
             <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="bg-background rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-primary/5 group">
@@ -197,6 +263,9 @@ const orderOnWhatsApp = () => {
               <div className="p-6 text-center">
                 <h3 className="text-2xl font-serif font-bold text-foreground mb-2">{sweet.name}</h3>
                 <p className="text-muted-foreground mb-6">{sweet.desc}</p>
+              <p className="text-primary font-bold text-lg mb-4">
+  ₹{sweet.price}
+</p>
               <button
   onClick={() => addToCart(sweet.name)}
   className="inline-block px-6 py-2 border-2 border-primary text-primary font-bold rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
