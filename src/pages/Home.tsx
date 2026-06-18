@@ -161,16 +161,17 @@ const totalPrice = Object.entries(cart).reduce(
   0
 );
   const items = Object.entries(cart)
-  .map(([item, qty]) => `${item} × ${qty}`)
+  .map(([item, qty]) => `${item} x ${qty}`)
   .join(", ");
 
   const message = `Hello Harihar Hotel, I would like to order: ${items}`;
+const whatsappUrl =
+  `https://wa.me/916232092514?text=${encodeURIComponent(message)}`;
 
-  window.open(
-    `https://wa.me/916232092514?text=${encodeURIComponent(message)}`,
-    "_blank"
-  );
-  setCart({});
+console.log(whatsappUrl);
+
+window.location.href = whatsappUrl;
+
 };
   
   const sweets = [
