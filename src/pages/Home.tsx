@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 
-const WHATSAPP_URL = "https://wa.me/919999999999";
+const WHATSAPP_URL = "https://wa.me/916232092514";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -167,7 +167,7 @@ const totalPrice = Object.entries(cart).reduce(
   const message = `Hello Harihar Hotel, I would like to order: ${items}`;
 
   window.open(
-    `https://wa.me/919999999999?text=${encodeURIComponent(message)}`,
+    `https://wa.me/916232092514?text=${encodeURIComponent(message)}`,
     "_blank"
   );
   setCart({});
